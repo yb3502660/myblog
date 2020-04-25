@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bingo.dao.TConfigureInfoDao">
+
+    <resultMap type="com.bingo.entity.TConfigureInfo" id="TConfigureInfoMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="key" column="key" jdbcType="VARCHAR"/>
+        <result property="value" column="value" jdbcType="VARCHAR"/>
+        <result property="desc" column="desc" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id='sql_columns'>
+     id, key, value, desc    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TConfigureInfoMap">
+        select
+     <include refid='sql_where'/>
+
+        from Blog.t_configure_info
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TConfigureInfoMap">
+        select
+          id, key, value, desc
+        from Blog.t_configure_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TConfigureInfoMap" >
+        select
+          id, key, value, desc
+        from Blog.t_configure_info
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="key != null and key != ''">
+                and key = #{key}
+            </if>
+            <if test="value != null and value != ''">
+                and value = #{value}
+            </if>
+            <if test="desc != null and desc != ''">
+                and desc = #{desc}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into Blog.t_configure_info(key, value, desc)
+        values (#{key}, #{value}, #{desc})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update Blog.t_configure_info
+        <set>
+            <if test="key != null and key != ''">
+                key = #{key},
+            </if>
+            <if test="value != null and value != ''">
+                value = #{value},
+            </if>
+            <if test="desc != null and desc != ''">
+                desc = #{desc},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from Blog.t_configure_info where id = #{id}
+    </delete>
+    
+       <!-- 批量删除数据 -->
+    <delete id='batchDel' parameterType='java.util.ArrayList'>
+        delete from Blog.t_configure_info where id in
+        <foreach collection='list' item='id' separator=',' open='(' close=')'>
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
