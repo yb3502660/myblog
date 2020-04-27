@@ -1,7 +1,7 @@
 package com.bingo.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.bingo.component.FDFSClient.client.*;
+import com.bingo.component.entity.FDFSClient.client.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -59,8 +60,33 @@ public class FileObjectController {
     public FileResponseData uploadFileSample(MultipartFile file, HttpServletRequest request){
         System.out.println("upload is run...");
         System.out.println("file:"+JSON.toJSONString(file));
-        return uploadSample(file, request);
+        FileResponseData fileResponseData = uploadSample(file, request);
+        fileResponseData.setFileName(file.getOriginalFilename());
+        return fileResponseData;
     }
+
+
+    @RequestMapping(value = "/upload/file/sample2")
+    @ResponseBody
+    public Object uploadFileSample2(@RequestParam("upload") MultipartFile file, HttpServletRequest request){
+        System.out.println("upload is run...");
+        System.out.println("file:"+JSON.toJSONString(file));
+        FileResponseData fileResponseData = uploadSample(file, request);
+        fileResponseData.setFileName(file.getOriginalFilename());
+        HashMap<String, Object> obj = new HashMap<>();
+
+        if(fileResponseData.isSuccess()){
+            obj.put("url", "http://"+fileResponseData.getHttpUrl());
+            obj.put("uploaded", true);
+
+        }else {
+            obj.put("url", "/");
+            obj.put("uploaded", false);
+        }
+
+        return obj;
+    }
+
 
     /**
      * 只能上传图片，只上传文件到服务器，不会保存记录到数据库. <br>

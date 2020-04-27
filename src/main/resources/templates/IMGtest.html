@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div>
+    <div>
+        <input type="text" name="contentId"> contentid
+
+    </div>
+    <div>
+        <input type="file" name="file" id="file">
+        <input type="hidden" name="imgName">
+        <input type="hidden" name="imgUrl">
+    </div>
+    <div id="display">
+    </div>
+
+    <button id="upload" onclick="upload()">上传</button>
+    <button id="save" onclick="save()">保存</button>
+
+</div>
+
+<script src="/static/js/jquery.min.js"></script>
+
+<script>
+
+    $(function () {
+
+        console.log(1)
+
+    })
+
+    function upload() {
+        console.log('upload is run...')
+        var formData=new FormData();
+        var file = $('#file')[0].files[0];
+        formData.append('file',file)
+        console.log('file:'+file)
+        $.ajax({
+            type:'POST',
+            // url:'/tMainContentImgs/save',
+            url:'/fastdfs/upload/file/sample',
+            data:formData,
+            contentType:false,
+            processData : false,
+            success:function (data) {
+                console.log(data)
+                if(data.success==true){//成功
+                    //图片路径
+                    data.httpUrl='http://'+data.httpUrl
+                    //显示图片到页面
+                    var html='       <img src="'+data.httpUrl+'" alt="">'
+                    $('#display').html(html);
+                    //隐藏域赋值
+                    $('input[name="imgName"]').val(data.fileName)
+                    $('input[name="imgUrl"]').val(data.httpUrl)
+
+                }
+            }
+        })
+
+    }
+
+
+    function save() {
+        console.log('save is run...')
+        var formData=new FormData();
+        var contentId = $('input[name="contentId"]').val();
+        var imgName = $('input[name="imgName"]').val();
+        var imgUrl = $('input[name="imgUrl"]').val();
+
+        formData.append('contentId',contentId);
+        formData.append('imgName',imgName);
+        formData.append('imgUrl',imgUrl);
+        $.ajax({
+            type:'POST',
+            url:'/tMainContentImgs/save',
+            // url:'/fastdfs/upload/file/sample',
+            data:formData,
+            contentType:false,
+            processData : false,
+            success:function (data) {
+                console.log(data)
+
+            }
+        })
+
+    }
+
+</script>
+</body>
+</html>

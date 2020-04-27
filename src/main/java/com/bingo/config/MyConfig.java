@@ -1,6 +1,6 @@
 package com.bingo.config;
 
-import com.bingo.component.MyBean;
+import com.bingo.component.entity.test.MyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

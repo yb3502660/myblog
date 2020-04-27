@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bingo.mapper.TMainContentImgsMapper">
+
+    <resultMap type="com.bingo.component.entity.content.TMainContentImgs" id="TMainContentImgsMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="contentId" column="content_id" jdbcType="INTEGER"/>
+        <result property="imgName" column="img_name" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id='sql_columns'>
+     id, content_id, img_name, img_url    </sql>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TMainContentImgsMap">
+        select
+     <include refid='sql_columns'/>
+
+        from Blog.t_main_content_imgs
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TMainContentImgsMap">
+        select
+          id, content_id, img_name, img_url
+        from Blog.t_main_content_imgs
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TMainContentImgsMap">
+        select
+          id, content_id, img_name, img_url
+        from Blog.t_main_content_imgs
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="contentId != null">
+                and content_id = #{contentId}
+            </if>
+            <if test="imgName != null and imgName != ''">
+                and img_name = #{imgName}
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                and img_url = #{imgUrl}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into Blog.t_main_content_imgs(content_id, img_name, img_url)
+        values (#{contentId}, #{imgName}, #{imgUrl})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update Blog.t_main_content_imgs
+        <set>
+            <if test="contentId != null">
+                content_id = #{contentId},
+            </if>
+            <if test="imgName != null and imgName != ''">
+                img_name = #{imgName},
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                img_url = #{imgUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from Blog.t_main_content_imgs where id = #{id}
+    </delete>
+    
+       <!-- 批量删除数据 -->
+    <delete id='batchDel' parameterType='java.util.ArrayList'>
+        delete from Blog.t_main_content_imgs where id in
+        <foreach collection='list' item='id' separator=',' open='(' close=')'>
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

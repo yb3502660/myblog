@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>kindEditorTest</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
+    <!--<script src="/static/js/plugins/ckeditor.js" />-->
+
+</head>
+<body>
+
+<div id="main_body">
+    <h1>Classic editor</h1>
+
+    <textarea name="content" id="editor" cols="30" rows="10">
+        <p>初始化内容</p>
+    </textarea>
+
+   <!--<div id="editor">-->
+
+   <!--</div>-->
+
+
+
+</div>
+
+
+
+<!--<script src="/static/js/jquery.min.js"></script>-->
+<!--<script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js" />-->
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#editor' ),{
+            ckfinder: {
+                uploadUrl: "/fastdfs/upload/file/sample2"
+            }
+        } )
+        .catch( error => {
+        console.error( error );
+    } );
+</script>
+
+</body>
+</html>
