@@ -3,6 +3,8 @@ package com.bingo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 /**
  * @author:yaobin
@@ -11,7 +13,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.bingo.mapper**")
-public class ApplicationMain {
+public class ApplicationMain extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(ApplicationMain.class);
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(ApplicationMain.class, args);
     }

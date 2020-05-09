@@ -3,41 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <title>kindEditorTest</title>
-    <script src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
+    <!--<script src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>-->
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/plugins/ckEditor/ckeditor.js"></script>
+    <script src="../static/js/plugins/ckEditor/translations/zh-cn.js"></script>
+    <link  rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/bootstrap.min.js"></script>
+
     <!--<script src="/static/js/plugins/ckeditor.js" />-->
 
+    <style>
+        /*.ck-editor__main{*/
+            /*width:75%;*/
+            /*padding-right: 0;*/
+            /*float: right;*/
+        /*}*/
+
+        .ck-editor__editable {
+            min-height: 200px;
+        }
+    </style>
 </head>
 <body>
 
 <div id="main_body">
     <h1>Classic editor</h1>
 
-    <textarea name="content" id="editor" cols="30" rows="10">
-        <p>初始化内容</p>
-    </textarea>
+    <!--上部分 s-->
+    <div id="top">
 
-   <!--<div id="editor">-->
 
-   <!--</div>-->
+
+        <div style="padding: 100px 100px 10px;">
+            <form class="bs-example bs-example-form" role="form" >
+                <div class="input-group" style="width: 654px">
+                    <span class="input-group-addon" >主标题</span>
+                    <input type="text" id="mainTitle" name="mainTitle" class="form-control" placeholder="请输入">
+                </div>
+                <br>
+                <div class="input-group" style="width: 654px">
+                    <span class="input-group-addon">副标题</span>
+                    <input type="text" id="subTitle" name="subTitle" class="form-control" placeholder="请输入">
+                </div>
+                <br>
+                <div class="input-group" style="width: 654px">
+                    <span class="input-group-addon">主图</span>
+                    <input type="file" class="form-control" placeholder="请上传文件">
+                    <!--<button type="button" class="btn btn-default btn-lg input-group-addon">上传</button>-->
+                    <span class="input-group-addon btn btn-default btn-lg" onclick="uploadImg(this,'mainImg')">上传</span>
+
+                </div>
+                <div>
+
+                </div>
+
+
+                <br>
+                <div class="input-group" style="width: 654px">
+                    <span class="input-group-addon">副图</span>
+                    <input type="file" class="form-control" placeholder="请上传文件">
+                    <span class="input-group-addon btn btn-default btn-lg" onclick="uploadImg(this,'subImg')">上传</span>
+
+                </div>
+                <div>
+
+                </div>
+                <!--<div class="input-group">-->
+                    <!--<input type="text" class="form-control">-->
+                    <!--<span class="input-group-addon">.00</span>-->
+                <!--</div>-->
+                <!--<br>-->
+                <!--<div class="input-group">-->
+                    <!--<span class="input-group-addon">$</span>-->
+                    <!--<input type="text" class="form-control">-->
+                    <!--<span class="input-group-addon">.00</span>-->
+                <!--</div>-->
+            </form>
+        </div>
+
+
+
+    </div>
+    <!--上部分 E-->
+
+
+    <!--下部分 S-->
+    <div id="bottom">
+
+        <div name="content" id="editor" cols="30" rows="10">
+             <p>初始化内容</p>
+        </div>
+    </div>
+
+    <br>
+    <div>
+        <button type="button" class="btn btn-default btn-lg" style="margin-left: 200px" onclick="saveData()">保存</button>
+
+    </div>
+
+    <!--下部分 E-->
 
 
 
 </div>
 
 
-
 <!--<script src="/static/js/jquery.min.js"></script>-->
 <!--<script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js" />-->
-<script>
-    ClassicEditor
-        .create( document.querySelector( '#editor' ),{
-            ckfinder: {
-                uploadUrl: "/fastdfs/upload/file/sample2"
+<!--<script defer="defer">-->
+<script >
+    var MyEditor=null;
+    var htData='test111111'
+
+    var $json = {
+        fn: {
+            setJson: function (jsonStr, name, value) {
+                if (!jsonStr) jsonStr = "{}";
+                var jsonObj = JSON.parse(jsonStr);
+                jsonObj[name] = value;
+                return JSON.stringify(jsonObj)
+            },
+            deleteJson: function (jsonStr, name) {
+                if (!jsonStr) return null;
+                var jsonObj = JSON.parse(jsonStr);
+                delete jsonObj[name];
+                return JSON.stringify(jsonObj);
             }
-        } )
-        .catch( error => {
-        console.error( error );
-    } );
+        }
+
+    }
+    //上传图片
+    function uploadImg(obj,id){
+        var file=$(obj).prev()[0].files[0];
+        var imgDiv=$(obj).parent().next()
+        var formData=new FormData();
+        formData.append('file',file)
+        console.log('file:'+file)
+        $.ajax({
+            type:'POST',
+            // url:'/tMainContentImgs/save',
+            url:'../fastdfs/upload/file/sample',
+            data:formData,
+            contentType:false,
+            processData : false,
+            success:function (data) {
+                console.log(data)
+                if(data.success==true){//成功
+                    //图片路径
+                    data.httpUrl='http://'+data.httpUrl
+                    //显示图片到页面
+                    var html='       <img src="'+data.httpUrl+'" alt="">' +
+                        '<input name="'+id+'" id="'+id+'" type="hidden" value="'+data.httpUrl+'">'
+                    imgDiv.html(html);
+                }else {
+                    alert('上传失败')
+                }
+            }
+        })
+
+
+    }
+
+    //保存
+
+    function saveData(){
+        var jsonData=null
+        jsonData=$json.fn.setJson(jsonData,"mainTitle",$('#mainTitle').val())
+        jsonData=$json.fn.setJson(jsonData,"subTitle",$('#subTitle').val())
+        jsonData=$json.fn.setJson(jsonData,"mainImg",$('#mainImg').val())
+        jsonData=$json.fn.setJson(jsonData,"subImg",$('#subImg').val())
+        jsonData=$json.fn.setJson(jsonData,"subImg",$('#subImg').val())
+        jsonData=$json.fn.setJson(jsonData,"content",MyEditor.getData())
+        // jsonData.put("mainTitle",$('#mainTitle'))
+        // jsonData.put("subTitle",$('#subTitle'))
+        // jsonData.put("mainImg",$('#mainImg'))
+        // jsonData.put("sugImg",$('#sugImg'))
+        // jsonData.put("mainTitle",$('#mainTitle'))
+        // jsonData.put("mainTitle",$('#mainTitle'))
+        console.log('json:'+jsonData)
+
+        $.ajax({
+            type:'POST',
+            // url:'/tMainContentImgs/save',
+            url:'../tMainContentComments/save',
+            data:jsonData,
+            contentType:"application/json",
+            // processData : false,
+            success:function (data) {
+                console.log(data)
+                // if(data.success==true){//成功
+                //     //图片路径
+                //     data.httpUrl='http://'+data.httpUrl
+                //     //显示图片到页面
+                //     var html='       <img src="'+data.httpUrl+'" alt="">'
+                //     imgDiv.html(html);
+                // }else {
+                //     alert('上传失败')
+                // }
+            }
+        })
+
+    }
+
+    window.onload=function(){
+        // console.log(1)
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl: "../fastdfs/upload/file/sample2"
+                },
+                language: 'zh-cn'
+            })
+            .then(editor=>{
+                MyEditor = editor;
+                // window.editor=editor;
+                // console.log(editor.getData())
+                MyEditor.setData(htData)
+                // console.log('editor:'+editor)
+                // console.log('MyEditor:'+MyEditor)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // console.log('ww:'+window.editor)
+        // console.log('myEditor:'+MyEditor)
+        // console.log(result)
+        // var htmlStr = editor.getData();
+    }
+
+
+
 </script>
 
 </body>

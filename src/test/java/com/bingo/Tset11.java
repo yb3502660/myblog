@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 
@@ -46,6 +47,12 @@ public class Tset11 {
 
     @Test
     public void uploadTest(){
+
+//        String a = "\\u9999\\u6e2f\\u4ed3\\u6d4b\\u8bd5\\u8d27\\u53f7";
+//        System.out.println(a);
+        String s = new String("\\u9999\\u6e2f\\u4ed3\\u6d4b\\u8bd5\\u8d27\\u53f7".getBytes(), StandardCharsets.UTF_8);
+        System.out.println(s);
+
 
     }
 
