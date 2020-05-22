@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bingo.mapper.TMainContentDao">
+
+    <resultMap type="com.bingo.component.entity.content.TMainContent" id="TMainContentMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="mainTitle" column="main_title" jdbcType="VARCHAR"/>
+        <result property="subTitle" column="sub_title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUserId" column="create_user_id" jdbcType="INTEGER"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="mainImg" column="main_img" jdbcType="VARCHAR"/>
+        <result property="readCount" column="read_count" jdbcType="INTEGER"/>
+        <result property="subscribeCount" column="subscribe_count" jdbcType="INTEGER"/>
+        <result property="shareCount" column="share_count" jdbcType="INTEGER"/>
+        <result property="backImg" column="back_img" jdbcType="VARCHAR"/>
+        <result property="delete" column="delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询字段列-->
+    <sql id='sql_columns'>
+        id, main_title, sub_title, content, create_time, create_user_id, modify_time, main_img, read_count, subscribe_count, share_count, back_img, `delete`
+    </sql>
+
+    <!--根据id查询单个-->
+    <select id="queryById" resultMap="TMainContentMap" parameterType="java.lang.Integer">
+        select
+            <include refid='sql_columns'/>
+        from 
+            t_main_content
+        where 
+            id = #{id}
+    </select>
+
+   <!--查询单个-->
+    <select id="get" resultMap="TMainContentMap" parameterType="com.bingo.component.entity.content.TMainContent">
+        select
+            <include refid='sql_columns'/>
+        from 
+            t_main_content
+        <include refid="sql_where"/>
+    </select>
+    
+
+    <!--分页查询-->
+    <select id="selectAllByPage" resultMap="TMainContentMap" parameterType="com.bingo.component.entity.content.TMainContent">
+        select
+            <include refid="sql_columns"/>
+        from 
+            t_main_content
+        <include refid="sql_where"/>
+    </select>
+
+    <!--查询所有-->
+    <select id="selectAll" resultMap="TMainContentMap" parameterType="com.bingo.component.entity.content.TMainContent">
+        select
+            <include refid="sql_columns"/>
+        from 
+            t_main_content
+        <include refid="sql_where"/>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="com.bingo.component.entity.content.TMainContent">
+        insert into 
+            t_main_content
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test='mainTitle!=null and !"".equals(mainTitle)' > main_title , </if>
+                <if test='subTitle!=null and !"".equals(subTitle)' > sub_title , </if>
+                <if test='content!=null and !"".equals(content)' > content , </if>
+                <if test='createTime!=null and !"".equals(createTime)' > create_time , </if>
+                <if test='createUserId!=null and !"".equals(createUserId)' > create_user_id , </if>
+                <if test='modifyTime!=null and !"".equals(modifyTime)' > modify_time , </if>
+                <if test='mainImg!=null and !"".equals(mainImg)' > main_img , </if>
+                <if test='readCount!=null and !"".equals(readCount)' > read_count , </if>
+                <if test='subscribeCount!=null and !"".equals(subscribeCount)' > subscribe_count , </if>
+                <if test='shareCount!=null and !"".equals(shareCount)' > share_count , </if>
+                <if test='backImg!=null and !"".equals(backImg)' > back_img , </if>
+                <if test='delete!=null and !"".equals(delete)' > `delete` , </if>
+            </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," > 
+            <if test='mainTitle!=null  and !"".equals(mainTitle)  '>#{mainTitle} , </if>
+            <if test='subTitle!=null  and !"".equals(subTitle)  '>#{subTitle} , </if>
+            <if test='content!=null  and !"".equals(content)  '>#{content} , </if>
+            <if test='createTime!=null  '>#{createTime} , </if>
+            <if test='createUserId!=null  '>#{createUserId} , </if>
+            <if test='modifyTime!=null  '>#{modifyTime} , </if>
+            <if test='mainImg!=null  and !"".equals(mainImg)  '>#{mainImg} , </if>
+            <if test='readCount!=null  '>#{readCount} , </if>
+            <if test='subscribeCount!=null  '>#{subscribeCount} , </if>
+            <if test='shareCount!=null  '>#{shareCount} , </if>
+            <if test='backImg!=null  and !"".equals(backImg)  '>#{backImg} , </if>
+            <if test='delete!=null  '>#{delete} , </if>
+        </trim>
+    </insert>
+
+    <update id="readCountAdd" parameterType="java.lang.Integer">
+        update
+          t_main_content
+        set
+          read_count=read_count+1
+        where
+          id=#{id}
+    </update>
+
+    <update id="subscribeCountAdd" >
+        update
+          t_main_content
+        set
+        <choose>
+            <when test="method==0">
+                subscribe_count=subscribe_count+1
+
+            </when>
+            <when test="method==1">
+                subscribe_count=subscribe_count-1
+            </when>
+        </choose>
+        where
+          id=#{id}
+    </update>
+
+
+
+    <!--通过主键修改数据-->
+    <update id="update" parameterType="com.bingo.component.entity.content.TMainContent">
+        update 
+            t_main_content
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="mainTitle != null and !''.equals(mainTitle) ">
+                main_title = #{mainTitle},
+                </if>
+                <if test="subTitle != null and !''.equals(subTitle) ">
+                sub_title = #{subTitle},
+                </if>
+                <if test="content != null and ! ''.equals(content) ">
+                content = #{content},
+                </if>
+                <if test="createTime != null">
+                create_time = #{createTime},
+                </if>
+                <if test="createUserId != null">
+                create_user_id = #{createUserId},
+                </if>
+                <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+                </if>
+                <if test="mainImg != null and !''.equals(mainImg) ">
+                main_img = #{mainImg},
+                </if>
+                <if test="readCount != null">
+                read_count = #{readCount},
+                </if>
+                <if test="subscribeCount != null">
+                subscribe_count = #{subscribeCount},
+                </if>
+                <if test="shareCount != null">
+                share_count = #{shareCount},
+                </if>
+                <if test="backImg != null and !''.equals(backImg) ">
+                back_img = #{backImg},
+                </if>
+                <if test="delete != null">
+                `delete` = #{delete},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from 
+            t_main_content 
+        where 
+            id = #{id}
+    </delete>
+    
+       <!-- 批量删除数据 -->
+    <delete id='batchDel' parameterType='java.util.ArrayList'>
+        delete from $
+            t_main_content where id in
+        <foreach collection='list' item='id' separator=',' open='(' close=')'>
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id='sql_where'>
+        <where>
+            <trim prefixOverrides='and'>
+                <if test="tMainContent.id != null">
+                    and id = #{tMainContent.id}
+                </if>
+                <if test="tMainContent.mainTitle != null and !''.equals(tMainContent.mainTitle) ">
+                    and main_title = #{tMainContent.mainTitle}
+                </if>
+                <if test="tMainContent.subTitle != null and !''.equals(tMainContent.subTitle) ">
+                    and sub_title = #{tMainContent.subTitle}
+                </if>
+                <if test="tMainContent.content != null and !''.equals(tMainContent.content) ">
+                    and content = #{tMainContent.content}
+                </if>
+                <if test="tMainContent.createTime != null">
+                    and create_time = #{tMainContent.createTime}
+                </if>
+                <if test="tMainContent.createUserId != null">
+                    and create_user_id = #{tMainContent.createUserId}
+                </if>
+                <if test="tMainContent.modifyTime != null">
+                    and modify_time = #{modifyTime}
+                </if>
+                <if test="tMainContent.mainImg != null and !''.equals(tMainContent.mainImg) ">
+                    and main_img = #{tMainContent.mainImg}
+                </if>
+                <if test="tMainContent.readCount != null">
+                    and read_count = #{tMainContent.readCount}
+                </if>
+                <if test="tMainContent.subscribeCount != null">
+                    and subscribe_count = #{tMainContent.subscribeCount}
+                </if>
+                <if test="tMainContent.shareCount != null">
+                    and share_count = #{tMainContent.shareCount}
+                </if>
+                <if test="tMainContent.backImg != null and !''.equals(tMainContent.backImg) ">
+                    and back_img = #{tMainContent.backImg}
+                </if>
+                <if test="tMainContent.delete != null">
+                    and `delete` = #{tMainContent.delete}
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+
+</mapper>

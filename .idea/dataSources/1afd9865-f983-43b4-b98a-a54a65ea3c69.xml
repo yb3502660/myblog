@@ -929,17 +929,15 @@
     </table>
     <table id="234" parent="2" name="t_main_content">
       <Comment>博客文章表</Comment>
-      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="235" parent="2" name="t_main_content_comments">
       <Comment>博客文章评论表</Comment>
-      <Collation>latin1_swedish_ci</Collation>
     </table>
     <table id="236" parent="2" name="t_main_content_imgs">
       <Comment>博客文章图片表</Comment>
-      <Collation>latin1_swedish_ci</Collation>
     </table>
-    <column id="237" parent="233" name="id">
+    <table id="237" parent="2" name="t_main_content_tags"/>
+    <column id="238" parent="233" name="id">
       <Position>1</Position>
       <Comment>自增主键</Comment>
       <DataType>int(11)|0s</DataType>
@@ -947,30 +945,30 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="238" parent="233" name="key">
+    <column id="239" parent="233" name="key">
       <Position>2</Position>
       <Comment>配置信息键</Comment>
       <DataType>varchar(20)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="239" parent="233" name="value">
+    <column id="240" parent="233" name="value">
       <Position>3</Position>
       <Comment>配置信息值</Comment>
       <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="240" parent="233" name="desc">
+    <column id="241" parent="233" name="desc">
       <Position>4</Position>
       <Comment>描述</Comment>
       <DataType>varchar(20)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="241" parent="233" name="PRIMARY">
+    <key id="242" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="242" parent="234" name="id">
+    <column id="243" parent="234" name="id">
       <Position>1</Position>
       <Comment>主键自增</Comment>
       <DataType>int(11)|0s</DataType>
@@ -978,109 +976,168 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="243" parent="234" name="main_title">
+    <column id="244" parent="234" name="main_title">
       <Position>2</Position>
       <Comment>文章主标题</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <column id="244" parent="234" name="sub_title">
+    <column id="245" parent="234" name="sub_title">
       <Position>3</Position>
       <Comment>文章副标题</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <column id="245" parent="234" name="content">
+    <column id="246" parent="234" name="content">
       <Position>4</Position>
       <Comment>文章内容</Comment>
       <DataType>text|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <column id="246" parent="234" name="create_time">
+    <column id="247" parent="234" name="create_time">
       <Position>5</Position>
       <Comment>创建时间</Comment>
       <DataType>datetime|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="247" parent="234" name="create_user_id">
+    <column id="248" parent="234" name="create_user_id">
       <Position>6</Position>
       <Comment>创建人</Comment>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="248" parent="234" name="modify_time">
+    <column id="249" parent="234" name="modify_time">
       <Position>7</Position>
       <Comment>修改时间</Comment>
       <DataType>datetime|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="249" parent="234" name="PRIMARY">
+    <column id="250" parent="234" name="main_img">
+      <Position>8</Position>
+      <Comment>页面主图</Comment>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+      <Collation>latin1_swedish_ci</Collation>
+    </column>
+    <column id="251" parent="234" name="read_count">
+      <Position>9</Position>
+      <Comment>阅读数</Comment>
+      <DataType>int(10)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="252" parent="234" name="subscribe_count">
+      <Position>10</Position>
+      <Comment>点赞数</Comment>
+      <DataType>int(10)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="253" parent="234" name="share_count">
+      <Position>11</Position>
+      <Comment>分享数</Comment>
+      <DataType>int(10)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="254" parent="234" name="back_img">
+      <Position>12</Position>
+      <Comment>背景图</Comment>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="255" parent="234" name="delete">
+      <Position>13</Position>
+      <Comment>是否删除,0:未删除;1:已删除</Comment>
+      <DataType>tinyint(1)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="256" parent="234" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="250" parent="235" name="id">
+    <column id="257" parent="235" name="id">
       <Position>1</Position>
       <Comment>自增主键</Comment>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="251" parent="235" name="comment">
+    <column id="258" parent="235" name="comment">
       <Position>2</Position>
       <Comment>回复内容</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <column id="252" parent="235" name="content_id">
+    <column id="259" parent="235" name="content_id">
       <Position>3</Position>
       <Comment>文章主键id</Comment>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="253" parent="235" name="review_user_id">
+    <column id="260" parent="235" name="review_user_id">
       <Position>4</Position>
       <Comment>回复人id</Comment>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="254" parent="235" name="PRIMARY">
+    <key id="261" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="255" parent="236" name="id">
+    <column id="262" parent="236" name="id">
       <Position>1</Position>
       <Comment>自增主键</Comment>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="256" parent="236" name="content_id">
+    <column id="263" parent="236" name="content_id">
       <Position>2</Position>
       <Comment>关联主表t_main_content主键id</Comment>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="257" parent="236" name="img_name">
+    <column id="264" parent="236" name="img_name">
       <Position>3</Position>
       <Comment>图片名称</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <column id="258" parent="236" name="img_url">
+    <column id="265" parent="236" name="img_url">
       <Position>4</Position>
       <Comment>图片链接</Comment>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
-      <Collation>utf8mb4_general_ci</Collation>
     </column>
-    <key id="259" parent="236" name="PRIMARY">
+    <key id="266" parent="236" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="267" parent="237" name="id">
+      <Position>1</Position>
+      <Comment>自增主键</Comment>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="268" parent="237" name="tag_code">
+      <Position>2</Position>
+      <Comment>标签code</Comment>
+      <DataType>varchar(5)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="269" parent="237" name="tag_name">
+      <Position>3</Position>
+      <Comment>标签名</Comment>
+      <DataType>varchar(15)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="270" parent="237" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

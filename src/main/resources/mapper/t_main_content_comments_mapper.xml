@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bingo.mapper.TMainContentCommentsDao">
+
+    <resultMap type="com.bingo.component.entity.content.TMainContentComments" id="TMainContentCommentsMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="comment" column="comment" jdbcType="VARCHAR"/>
+        <result property="contentId" column="content_id" jdbcType="INTEGER"/>
+        <result property="reviewUserId" column="review_user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询字段列-->
+    <sql id='sql_columns'>
+        id, comment, content_id, review_user_id     
+    </sql>
+
+    <!--根据id查询单个-->
+    <select id="queryById" resultMap="TMainContentCommentsMap" parameterType="java.lang.Integer">
+        select
+            <include refid='sql_columns'/>
+        from 
+            t_main_content_comments
+        where 
+            id = #{id}
+    </select>
+
+   <!--查询单个-->
+    <select id="get" resultMap="TMainContentCommentsMap" parameterType="com.bingo.component.entity.content.TMainContentComments">
+        select
+            <include refid='sql_columns'/>
+        from 
+            t_main_content_comments
+        <include refid="sql_where"/>
+    </select>
+    
+
+    <!--分页查询-->
+    <select id="selectAllByPage" resultMap="TMainContentCommentsMap" parameterType="com.bingo.component.entity.content.TMainContentComments">
+        select
+            <include refid="sql_where"/>
+        from 
+            t_main_content_comments
+        <include refid="sql_where"/>
+        limit 
+            #{start}, #{pageSize}
+    </select>
+
+    <!--查询所有-->
+    <select id="selectAll" resultMap="TMainContentCommentsMap" parameterType="com.bingo.component.entity.content.TMainContentComments">
+        select
+            <include refid="sql_where"/>
+        from 
+            t_main_content_comments
+        <include refid="sql_where"/>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="com.bingo.component.entity.content.TMainContentComments">
+        insert into 
+            t_main_content_comments
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test='comment!=null and !"".equals(comment)' > comment , </if>
+                <if test='contentId!=null and !"".equals(contentId)' > content_id , </if>
+                <if test='reviewUserId!=null and !"".equals(reviewUserId)' > review_user_id , </if>
+            </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," > 
+            <if test='comment!=null  and !"".equals(comment)  '>#{comment} , </if>
+            <if test='contentId!=null  '>#{contentId} , </if>
+            <if test='reviewUserId!=null  '>#{reviewUserId} , </if>
+        </trim>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update" parameterType="com.bingo.component.entity.content.TMainContentComments">
+        update 
+            t_main_content_comments
+        <set>
+            <trim  suffixOverrides=",">
+                <if test="comment != null and != ''.equals(comment) ">
+                comment = #{comment},
+                </if>
+            </trim>
+            <trim  suffixOverrides=",">
+                <if test="contentId != null">
+                content_id = #{contentId},
+                </if>
+            </trim>
+            <trim  suffixOverrides=",">
+                <if test="reviewUserId != null">
+                review_user_id = #{reviewUserId},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from 
+            t_main_content_comments 
+        where 
+            id = #{id}
+    </delete>
+    
+       <!-- 批量删除数据 -->
+    <delete id='batchDel' parameterType='java.util.ArrayList'>
+        delete from $
+            t_main_content_comments where id in
+        <foreach collection='list' item='id' separator=',' open='(' close=')'>
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id='sql_where'>
+        <where>
+            <trim prefixOverrides='and'>
+                <if test="id != null">
+                    and id = #{id}
+                </if>
+                <if test="comment != null and != ''.equals(comment) ">
+                    and comment = #{comment}
+                </if>
+                <if test="contentId != null">
+                    and content_id = #{contentId}
+                </if>
+                <if test="reviewUserId != null">
+                    and review_user_id = #{reviewUserId}
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+
+</mapper>

@@ -13,12 +13,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @MapperScan("com.bingo.mapper**")
-public class ApplicationMain extends SpringBootServletInitializer {
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(ApplicationMain.class);
-    }
+public class ApplicationMain {
 
     public static void main(String[] args) {
         SpringApplication.run(ApplicationMain.class, args);

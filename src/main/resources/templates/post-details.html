@@ -11,6 +11,8 @@
     <!--- Font Icon -->
     <link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
     <link rel="stylesheet" href="../static/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <!--<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">-->
 
     <!-- Place favicon.ico in the root directory -->
 
@@ -19,7 +21,7 @@
     <link rel="stylesheet" href="../static/css/plugins.css">
 
     <!-- Theme Style -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <!--********************************************************-->
@@ -152,7 +154,7 @@
                                         <span class="fa fa-bolt"></span>
                                     </a>
                                 </div><!--./ featured-badge-list -->
-                                <h3 class="entry-title">spring boot的简单配置</h3><!--./ entry-title -->
+                                <h3 class="entry-title" id="mainTitle">spring boot的简单配置</h3><!--./ entry-title -->
                                 <div class="entry-meta-content">
 
 
@@ -171,13 +173,13 @@
 
                                     <!--发布日期S-->
                                     <div class="entry-date">
-                                        <span>October 24, 2019</span>
+                                        <span id="createTime">October 24, 2019</span>
                                     </div>
                                     <!--发布日期 E-->
 
                                     <!--./ entry-date -->
                                     <div class="entry-views">
-                                        <span>3 Min Read</span>
+                                        <span id="delta-T">3 Min Read</span>
                                     </div><!--./ entry-date -->
                                     <div class="entry-category">
                                         <a class="cat" href="#">LifeStyle</a>
@@ -193,14 +195,18 @@
 
                                     <div>
                                         <div class="entry-comment">
-                                            <span>64 阅读</span>
+                                            <span id="readCount">64 阅读</span>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="entry-comment">
-                                            <span>64 点赞</span>
+                                            <span id="subscribeCount">64 点赞</span>
                                         </div>
                                     </div>
+                                        1111
+                                    <button>
+                                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                                    </button>
                                     <!--点赞,阅读 E-->
 
                                     <!--./ entry-comment -->
@@ -224,20 +230,20 @@
 
                                     <div class="share" >
                                         <a class="facebook" href="#">
-                                            <span class="text" style="font-size: 25px">博客</span>
+                                            <span class="text" style="font-size: 25px" id="cat_tree_1">博客</span>
                                         </a>
                                         >
                                         <a class="twitter" href="#">
-                                            <span class="text" style="font-size: 25px">java</span>
+                                            <span class="text" style="font-size: 25px" id="cat_tree_2">java</span>
                                         </a>
                                         >
                                         <a class="google" href="#">
-                                            <span class="text" style="font-size: 25px" >spring boot的简单配置</span>
+                                            <span class="text" style="font-size: 25px" id="cat_tree_3">spring boot的简单配置</span>
                                         </a>
                                     </div>
                                 </div>
 
-                                <div class="entry-content">
+                                <div class="entry-content" id="mainContent">
                                     <p>Moving after made his Fowl blessed blessed that subdue sixth. Light place fifth fifth Herb had. Of divided own had won’t saying very. Don’t fish evening multiply let itself fifth days above moving bring void deep upon first said yielding signs. After likeness a. Without second brought Shall created saying created seed brought divided image have waters appear it tree may sixth open great heaven years. Creature saw have face thing lights in seasons hath without them. Which male in it void Whose isn’t dry creature Cattle.</p>
                                     <figure class="thumb text-center">
                                         <img src="../static/images/post/single/one/1.jpg" alt="Img">
@@ -279,6 +285,7 @@
                                         <a href="#" rel="tag">java</a>
                                         <a href="#" rel="tag">技术类</a>
                                         <a href="#" rel="tag">spring boot</a>
+                                        <a href="javascript:void(0)" rel="tag" style="margin-left: 200px" onclick="location.href='../pages/KindEditorTest.html?id='+getUrlParam('id')">编辑</a>
                                         <!--<a href="#" rel="tag">fashion</a>-->
                                         <!--<a href="#" rel="tag">lifestyle</a>-->
                                         <!--<a href="#" rel="tag">entrepreneurship</a>-->
@@ -721,5 +728,47 @@
     <script src="../static/js/plugins.js"></script>
     <!-- main js -->
     <script src="../static/js/main.js"></script>
+
+    <script>
+        $(function () {
+
+            var url = location.href;
+            var id = url.split('?id=')[1];
+            // console.log(test.split('?id=')[1])
+            console.log(id);
+
+            $.ajax({
+                url: "../tMainContent/content/"+id,
+                type:"GET",
+                data:"",
+                success:function (data) {
+                    $('#mainTitle').html(data.mainTitle)
+                    $('#mainContent').html(data.content)
+                    $('#cat_tree_3').html(data.mainTitle)
+                    if(data.createTime!=null){
+                        $('#createTime').html(data.createTime.substring(0,19))
+                    }
+                    $('#readCount').html(data.readCount+'阅读');
+                    $('#subscribeCount').html(data.subscribeCount+'点赞');
+                },
+                error:function () {
+                    console.log("网络错误")
+
+                }
+
+
+            })
+
+
+        })
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+
+    </script>
 </body>
 </html>

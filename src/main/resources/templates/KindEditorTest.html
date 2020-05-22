@@ -7,16 +7,16 @@
     <script src="../static/js/jquery.min.js"></script>
     <script src="../static/js/plugins/ckEditor/ckeditor.js"></script>
     <script src="../static/js/plugins/ckEditor/translations/zh-cn.js"></script>
-    <link  rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/bootstrap.min.js"></script>
 
     <!--<script src="/static/js/plugins/ckeditor.js" />-->
 
     <style>
         /*.ck-editor__main{*/
-            /*width:75%;*/
-            /*padding-right: 0;*/
-            /*float: right;*/
+        /*width:75%;*/
+        /*padding-right: 0;*/
+        /*float: right;*/
         /*}*/
 
         .ck-editor__editable {
@@ -33,11 +33,11 @@
     <div id="top">
 
 
-
         <div style="padding: 100px 100px 10px;">
-            <form class="bs-example bs-example-form" role="form" >
+            <form class="bs-example bs-example-form" role="form">
+                <input type="hidden" name="id" id="id">
                 <div class="input-group" style="width: 654px">
-                    <span class="input-group-addon" >主标题</span>
+                    <span class="input-group-addon">主标题</span>
                     <input type="text" id="mainTitle" name="mainTitle" class="form-control" placeholder="请输入">
                 </div>
                 <br>
@@ -53,7 +53,7 @@
                     <span class="input-group-addon btn btn-default btn-lg" onclick="uploadImg(this,'mainImg')">上传</span>
 
                 </div>
-                <div>
+                <div id="main_img">
 
                 </div>
 
@@ -65,22 +65,21 @@
                     <span class="input-group-addon btn btn-default btn-lg" onclick="uploadImg(this,'subImg')">上传</span>
 
                 </div>
-                <div>
+                <div id="sub_img">
 
                 </div>
                 <!--<div class="input-group">-->
-                    <!--<input type="text" class="form-control">-->
-                    <!--<span class="input-group-addon">.00</span>-->
+                <!--<input type="text" class="form-control">-->
+                <!--<span class="input-group-addon">.00</span>-->
                 <!--</div>-->
                 <!--<br>-->
                 <!--<div class="input-group">-->
-                    <!--<span class="input-group-addon">$</span>-->
-                    <!--<input type="text" class="form-control">-->
-                    <!--<span class="input-group-addon">.00</span>-->
+                <!--<span class="input-group-addon">$</span>-->
+                <!--<input type="text" class="form-control">-->
+                <!--<span class="input-group-addon">.00</span>-->
                 <!--</div>-->
             </form>
         </div>
-
 
 
     </div>
@@ -91,18 +90,23 @@
     <div id="bottom">
 
         <div name="content" id="editor" cols="30" rows="10">
-             <p>初始化内容</p>
+            <p>初始化内容</p>
         </div>
     </div>
 
     <br>
     <div>
         <button type="button" class="btn btn-default btn-lg" style="margin-left: 200px" onclick="saveData()">保存</button>
+        <button type="button" class="btn btn-default btn-lg" style="margin-left: 20px" onclick="location.href='../pages/category-list.html'">返回</button>
+
+    </div>
+
+
+    <div id="test1">
 
     </div>
 
     <!--下部分 E-->
-
 
 
 </div>
@@ -111,9 +115,47 @@
 <!--<script src="/static/js/jquery.min.js"></script>-->
 <!--<script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js" />-->
 <!--<script defer="defer">-->
-<script >
-    var MyEditor=null;
-    var htData='test111111'
+<script>
+    var MyEditor = null;
+    var htData = 'test111111'
+    var initData = null;
+    $(function () {
+        var id =location.href.split('?id=')[1]
+        $.ajax({
+            type: 'get',
+            // url:'/tMainContentImgs/save',
+            url: '../tMainContent/content/'+id,
+            // data: {"id": id},
+            // contentType:"application/json",
+            // processData : false,
+            success: function (data) {
+                initData = data.content;
+                $('#mainTitle').val(data.mainTitle)
+                $('#subTitle').val(data.subTitle)
+                console.log('id1:'+data.id)
+                // console.log('id2:'+data[id])
+                console.log('id3:'+data['id'])
+                $('#id').val(data.id)
+                if (data.mainImg != null) {
+                    var main_img_html = '' +
+                        '<img src="' + data.mainImg + '" alt="">' +
+                        '<input name="mainImg" id="mainImg" type="hidden" value="' + data.mainImg + '">'
+                    $('#main_img').html(main_img_html);
+                }
+
+                if (data.backImg != null) {
+                    var sub_img_html = '' +
+                        '<img src="' + data.backImg + '" alt="">' +
+                        '<input name="subImg" id="subImg" type="hidden" value="' + data.backImg + '">'
+                    $('#sub_img').html(sub_img_html);
+                }
+
+            }
+        })
+
+
+    });
+
 
     var $json = {
         fn: {
@@ -132,30 +174,32 @@
         }
 
     }
+
     //上传图片
-    function uploadImg(obj,id){
-        var file=$(obj).prev()[0].files[0];
-        var imgDiv=$(obj).parent().next()
-        var formData=new FormData();
-        formData.append('file',file)
-        console.log('file:'+file)
+    function uploadImg(obj, id) {
+        var file = $(obj).prev()[0].files[0];
+        var imgDiv = $(obj).parent().next()
+        var formData = new FormData();
+        formData.append('file', file)
+        console.log('file:' + file)
         $.ajax({
-            type:'POST',
+            type: 'POST',
             // url:'/tMainContentImgs/save',
-            url:'../fastdfs/upload/file/sample',
-            data:formData,
-            contentType:false,
-            processData : false,
-            success:function (data) {
+            url: '../fastdfs/upload/file/sample',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
                 console.log(data)
-                if(data.success==true){//成功
+                if (data.success == true) {//成功
                     //图片路径
-                    data.httpUrl='http://'+data.httpUrl
+                    data.httpUrl = 'http://' + data.httpUrl
                     //显示图片到页面
-                    var html='       <img src="'+data.httpUrl+'" alt="">' +
-                        '<input name="'+id+'" id="'+id+'" type="hidden" value="'+data.httpUrl+'">'
+                    var html = '' +
+                        '<img src="' + data.httpUrl + '" alt="">' +
+                        '<input name="' + id + '" id="' + id + '" type="hidden" value="' + data.httpUrl + '">'
                     imgDiv.html(html);
-                }else {
+                } else {
                     alert('上传失败')
                 }
             }
@@ -166,71 +210,79 @@
 
     //保存
 
-    function saveData(){
-        var jsonData=null
-        jsonData=$json.fn.setJson(jsonData,"mainTitle",$('#mainTitle').val())
-        jsonData=$json.fn.setJson(jsonData,"subTitle",$('#subTitle').val())
-        jsonData=$json.fn.setJson(jsonData,"mainImg",$('#mainImg').val())
-        jsonData=$json.fn.setJson(jsonData,"subImg",$('#subImg').val())
-        jsonData=$json.fn.setJson(jsonData,"subImg",$('#subImg').val())
-        jsonData=$json.fn.setJson(jsonData,"content",MyEditor.getData())
+    function saveData() {
+        var jsonData = null
+        jsonData = $json.fn.setJson(jsonData, "mainTitle", $('#mainTitle').val())
+        jsonData = $json.fn.setJson(jsonData, "subTitle", $('#subTitle').val())
+        jsonData = $json.fn.setJson(jsonData, "mainImg", $('#mainImg').val())
+        jsonData = $json.fn.setJson(jsonData, "subImg", $('#subImg').val())
+        jsonData=$json.fn.setJson(jsonData,"id",$('#id').val())
+        jsonData = $json.fn.setJson(jsonData, "content", MyEditor.getData())
         // jsonData.put("mainTitle",$('#mainTitle'))
         // jsonData.put("subTitle",$('#subTitle'))
         // jsonData.put("mainImg",$('#mainImg'))
         // jsonData.put("sugImg",$('#sugImg'))
         // jsonData.put("mainTitle",$('#mainTitle'))
         // jsonData.put("mainTitle",$('#mainTitle'))
-        console.log('json:'+jsonData)
+        console.log('json:' + jsonData)
 
         $.ajax({
-            type:'POST',
+            type: 'POST',
             // url:'/tMainContentImgs/save',
-            url:'../tMainContentComments/save',
-            data:jsonData,
-            contentType:"application/json",
+            url: '../tMainContent/save',
+            data: jsonData,
+            contentType: "application/json",
             // processData : false,
-            success:function (data) {
+            success: function (data) {
                 console.log(data)
-                // if(data.success==true){//成功
+                if(data=='success'){//成功
                 //     //图片路径
                 //     data.httpUrl='http://'+data.httpUrl
                 //     //显示图片到页面
                 //     var html='       <img src="'+data.httpUrl+'" alt="">'
                 //     imgDiv.html(html);
-                // }else {
-                //     alert('上传失败')
-                // }
+                    alert('保存成功')
+                    location.href='../pages/category-list.html';
+                }else {
+                    alert('保存失败')
+                }
             }
         })
 
     }
 
-    window.onload=function(){
+    window.onload = function () {
+        console.log('initData2:'+initData)
         // console.log(1)
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                ckfinder: {
-                    uploadUrl: "../fastdfs/upload/file/sample2"
-                },
-                language: 'zh-cn'
-            })
-            .then(editor=>{
-                MyEditor = editor;
-                // window.editor=editor;
-                // console.log(editor.getData())
-                MyEditor.setData(htData)
-                // console.log('editor:'+editor)
-                // console.log('MyEditor:'+MyEditor)
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        setTimeout(function () {
+            // $('#test1').html(initData)
+            ClassicEditor
+                .create(document.querySelector('#editor'), {
+                    ckfinder: {
+                        uploadUrl: "../fastdfs/upload/file/sample2"
+                    },
+                    language: 'zh-cn'
+                })
+                .then(editor => {
+                    MyEditor = editor;
+                    // window.editor=editor;
+                    // console.log(editor.getData())
+                    console.log('initData:'+initData)
+                    MyEditor.setData(initData)
+                    // console.log('editor:'+editor)
+                    // console.log('MyEditor:'+MyEditor)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }, 500);
+
         // console.log('ww:'+window.editor)
         // console.log('myEditor:'+MyEditor)
         // console.log(result)
         // var htmlStr = editor.getData();
     }
-
 
 
 </script>
