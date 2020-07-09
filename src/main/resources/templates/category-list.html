@@ -681,20 +681,7 @@
     <script src="../static/js/jquery.min.js"></script>
     <!-- Bootstrap js -->
     <script src="../static/js/bootstrap.min.js"></script>
-    <!-- Popper js -->
-    <script src="../static/js/popper.min.js"></script>
-    <!-- Owl carousel js -->
-    <script src="../static/js/owl.carousel.min.js"></script>
-    <!-- Masonary js -->
-    <script src="../static/js/masonary.min.js"></script>
-    <!-- News Ticker js -->
-    <script src="../static/js/breaking-news-ticker.min.js"></script>
-    <!-- Trackpad Scroll js -->
-    <script src="../static/js/jquery.trackpad-scroll-emulator.min.js"></script>
-    <!-- Sticky ResizeSensor js -->
-    <script src="../static/js/ResizeSensor.min.js"></script>
-    <!-- Sticky Sidebar js -->
-    <script src="../static/js/theia-sticky-sidebar.min.js"></script>
+
     <!-- Plugin js -->
     <script src="../static/js/plugins.js"></script>
     <!-- main js -->
@@ -703,111 +690,160 @@
 
 <script>
 
-    var runCallback1 = null;
-    new dmm({
-        // index: 1,//当前页面                   默认1
-        cssStyle: 3, //控件样式                   默认1
-        size: [10, 20, 30],//每页显示条数           默认[10,20]
-        skip: true,//是否显示跳转功能               默认不显示
-        setSize: true,//是否显示下拉框              默认不显示
-        container: "pageParent", //控件容器id
-        //回掉函数，一般就是post请求后台方法得到分页数据加载到页面上
-        callback: function(e) {
-            console.log('callback is run...')
-            var page=e.index-1; //当前页
-            var size=e.pageSize1; //页面显示条数
-            //以上两个属性可以当作请求后台时传入的参数
-            //发送后台
-
-            $.ajax({
-                // url: "../tMainContent/content/list/"+page+"/"+size,
-                url: "../tMainContent/content/list/"+page+"/"+size,
-                type: 'GET',
-                success:function (data) {
-                    console.log('ajax is success...')
-                    for (var i=0;i<data.list.length;i++) {
-                        // console.log(i)
-                        var obj=data.list[i];
-                        // console.log(obj.mainImg)
-                        if(obj.mainImg==null){
-                            obj.mainImg='../static/images/icon_144x144.png'
-                        }
-                        // console.log(obj.mainImg)
-
-                        var htmlStr='' +
-                            '<div class="col-12 load-post">\n' +
-                            '    <article class="post hentry post-list">\n' +
-                            '        <div class="entry-thumb">\n' +
-                            '            <figure class="thumb-wrap">\n' +
-                            '                <a href="post-details.html?id='+obj.id+'">\n' +
-                            '                    <img src="'+obj.mainImg+'" alt="图片未找到">\n' +
-                            '                </a>\n' +
-                            '                <div class="featured-badge-list">\n' +
-                            '                    <!--图片旁边的小火-->\n' +
-                            '                    <!--<a class="trending" href="#">-->\n' +
-                            '                        <!--<span class="fab fa-gripfire"></span>-->\n' +
-                            '                    <!--</a>-->\n' +
-                            '                </div><!--./ featured-badge-list -->\n' +
-                            '            </figure><!--./ thumb-wrap -->\n' +
-                            '        </div><!--./ entry-thumb -->\n' +
-                            '        <div class="content-entry-wrap">\n' +
-                            '            <div class="entry-content">\n' +
-                            '                <h3 class="entry-title">\n' +
-                            '                    <a href="post-details.html?id='+obj.id+'">'+obj.mainTitle+'</a>\n' +
-                            '                </h3><!--./ entry-title -->\n' +
-                            '            </div><!--./ entry-content -->\n' +
-                            '            <div class="entry-meta-content">\n' +
-                            '                <div class="entry-meta-author">\n' +
-                            '                    <div class="entry-author-thumb">\n' +
-                            '                        <img class="avatar photo" src="http://49.235.22.169:9888/group1/M00/00/00/rBEADV6m3JaAIxvOAAHfBzcKaNA685.png?token=5e3896a72fd673794faf330de85fb132&ts=1587993750" alt="author">\n' +
-                            '                    </div>\n' +
-                            '                    <div class="entry-author-name">\n' +
-                            '                        <a href="#">bingo</a>\n' +
-                            '                    </div>\n' +
-                            '                </div><!--./ entry-meta-author -->\n' +
-                            '                <div class="entry-date">\n' +
-                            '                    <span>'+obj.createTime+'</span>\n' +
-                            '                </div><!--./ entry-date -->\n' +
-                            '                <div class="entry-views">\n' +
-                            '                    <span>30分钟前</span>\n' +
-                            '                </div><!--./ entry-date -->\n' +
-                            '                <div class="entry-category">\n' +
-                            '                    <a class="cat" href="#">Java</a>\n' +
-                            '                </div><!--./ entry-category -->\n' +
-                            '            </div><!--./ entry-meta-content -->\n' +
-                            '            <div class="entry-summary">\n' +
-                            '                <p>'+obj.subTitle+'</p>\n' +
-                            '            </div>\n' +
-                            '        </div><!--./ content-entry-wrap -->\n' +
-                            '    </article>\n' +
-                            '</div>\n'
-                        $('#main_list').append(htmlStr);
-
-                    }
-                    //以下三行在加载完页面后必须填写
-                    e.countpage = data['pages']; //注意必写（数据总页数??通过后台方法获取）
-                    // console.log('data.total:'+data.total)
-                    // console.log('e:'+e)
-                    e.infocount = data['total']; //注意必写（数据总条数??通过后台方法获取）
-                    xian(e); //注意必写（加载控件）
-                    runCallback1 = e; //将分页条件赋值变量
-
-                },
-                error:function () {
-
-                }
-            })
-
-
-
-            //
-            //可将以下代码用于查询使用--联合dian()方法
-        }
-    });
+    // var runCallback1 = null;
+    // new dmm({
+    //     // index: 1,//当前页面                   默认1
+    //     cssStyle: 3, //控件样式                   默认1
+    //     size: [10, 20, 30],//每页显示条数           默认[10,20]
+    //     skip: true,//是否显示跳转功能               默认不显示
+    //     setSize: true,//是否显示下拉框              默认不显示
+    //     container: "pageParent", //控件容器id
+    //     //回掉函数，一般就是post请求后台方法得到分页数据加载到页面上
+    //     callback: function(e) {
+    //         console.log('callback is run...')
+    //         var page=e.index-1; //当前页
+    //         var size=e.pageSize1; //页面显示条数
+    //         //以上两个属性可以当作请求后台时传入的参数
+    //         //发送后台
+    //
+    //         $.ajax({
+    //             // url: "../tMainContent/content/list/"+page+"/"+size,
+    //             url: "../tMainContent/content/list/"+page+"/"+size,
+    //             type: 'GET',
+    //             success:function (data) {
+    //                 console.log('ajax is success...')
+    //                 for (var i=0;i<data.list.length;i++) {
+    //                     // console.log(i)
+    //                     var obj=data.list[i];
+    //                     // console.log(obj.mainImg)
+    //                     if(obj.mainImg==null){
+    //                         obj.mainImg='../static/images/icon_144x144.png'
+    //                     }
+    //                     // console.log(obj.mainImg)
+    //
+    //                     var htmlStr='' +
+    //                         '<div class="col-12 load-post">\n' +
+    //                         '    <article class="post hentry post-list">\n' +
+    //                         '        <div class="entry-thumb">\n' +
+    //                         '            <figure class="thumb-wrap">\n' +
+    //                         '                <a href="post-details.html?id='+obj.id+'">\n' +
+    //                         '                    <img src="'+obj.mainImg+'" alt="图片未找到">\n' +
+    //                         '                </a>\n' +
+    //                         '                <div class="featured-badge-list">\n' +
+    //                         '                    <!--图片旁边的小火-->\n' +
+    //                         '                    <!--<a class="trending" href="#">-->\n' +
+    //                         '                        <!--<span class="fab fa-gripfire"></span>-->\n' +
+    //                         '                    <!--</a>-->\n' +
+    //                         '                </div><!--./ featured-badge-list -->\n' +
+    //                         '            </figure><!--./ thumb-wrap -->\n' +
+    //                         '        </div><!--./ entry-thumb -->\n' +
+    //                         '        <div class="content-entry-wrap">\n' +
+    //                         '            <div class="entry-content">\n' +
+    //                         '                <h3 class="entry-title">\n' +
+    //                         '                    <a href="post-details.html?id='+obj.id+'">'+obj.mainTitle+'</a>\n' +
+    //                         '                </h3><!--./ entry-title -->\n' +
+    //                         '            </div><!--./ entry-content -->\n' +
+    //                         '            <div class="entry-meta-content">\n' +
+    //                         '                <div class="entry-meta-author">\n' +
+    //                         '                    <div class="entry-author-thumb">\n' +
+    //                         '                        <img class="avatar photo" src="http://49.235.22.169:9888/group1/M00/00/00/rBEADV6m3JaAIxvOAAHfBzcKaNA685.png?token=5e3896a72fd673794faf330de85fb132&ts=1587993750" alt="author">\n' +
+    //                         '                    </div>\n' +
+    //                         '                    <div class="entry-author-name">\n' +
+    //                         '                        <a href="#">bingo</a>\n' +
+    //                         '                    </div>\n' +
+    //                         '                </div><!--./ entry-meta-author -->\n' +
+    //                         '                <div class="entry-date">\n' +
+    //                         '                    <span>'+obj.createTime+'</span>\n' +
+    //                         '                </div><!--./ entry-date -->\n' +
+    //                         '                <div class="entry-views">\n' +
+    //                         '                    <span>30分钟前</span>\n' +
+    //                         '                </div><!--./ entry-date -->\n' +
+    //                         '                <div class="entry-category">\n' +
+    //                         '                    <a class="cat" href="#">Java</a>\n' +
+    //                         '                </div><!--./ entry-category -->\n' +
+    //                         '            </div><!--./ entry-meta-content -->\n' +
+    //                         '            <div class="entry-summary">\n' +
+    //                         '                <p>'+obj.subTitle+'</p>\n' +
+    //                         '            </div>\n' +
+    //                         '        </div><!--./ content-entry-wrap -->\n' +
+    //                         '    </article>\n' +
+    //                         '</div>\n'
+    //                     $('#main_list').append(htmlStr);
+    //
+    //                 }
+    //                 //以下三行在加载完页面后必须填写
+    //                 e.countpage = data['pages']; //注意必写（数据总页数??通过后台方法获取）
+    //                 // console.log('data.total:'+data.total)
+    //                 // console.log('e:'+e)
+    //                 e.infocount = data['total']; //注意必写（数据总条数??通过后台方法获取）
+    //                 xian(e); //注意必写（加载控件）
+    //                 runCallback1 = e; //将分页条件赋值变量
+    //
+    //             },
+    //             error:function () {
+    //
+    //             }
+    //         })
+    //
+    //
+    //
+    //         //
+    //         //可将以下代码用于查询使用--联合dian()方法
+    //     }
+    // });
 
     $(function () {
-        var page = getUrlParam('page');
-        var size = getUrlParam('size');
+        // var page = getUrlParam('page');
+        // var size = getUrlParam('size');
+        var htmlStr='' +
+            '<div class="col-12 load-post">\n' +
+            '    <article class="post hentry post-list">\n' +
+            '        <div class="entry-thumb">\n' +
+            '            <figure class="thumb-wrap">\n' +
+            '                <a href="post-details.html?id='+11+'">\n' +
+            '                    <img src="'+"http://49.235.22.169:9888/group1/M00/00/00/rBEADV6m3JaAIxvOAAHfBzcKaNA685.png?token=5e3896a72fd673794faf330de85fb132&ts=1587993750"+'" alt="图片未找到">\n' +
+            '                </a>\n' +
+            '                <div class="featured-badge-list">\n' +
+            '                    <!--图片旁边的小火-->\n' +
+            '                    <!--<a class="trending" href="#">-->\n' +
+            '                        <!--<span class="fab fa-gripfire"></span>-->\n' +
+            '                    <!--</a>-->\n' +
+            '                </div><!--./ featured-badge-list -->\n' +
+            '            </figure><!--./ thumb-wrap -->\n' +
+            '        </div><!--./ entry-thumb -->\n' +
+            '        <div class="content-entry-wrap">\n' +
+            '            <div class="entry-content">\n' +
+            '                <h3 class="entry-title">\n' +
+            '                    <a href="post-details.html?id='+11+'">'+11+'</a>\n' +
+            '                </h3><!--./ entry-title -->\n' +
+            '            </div><!--./ entry-content -->\n' +
+            '            <div class="entry-meta-content">\n' +
+            '                <div class="entry-meta-author">\n' +
+            '                    <div class="entry-author-thumb">\n' +
+            '                        <img class="avatar photo" src="http://49.235.22.169:9888/group1/M00/00/00/rBEADV6m3JaAIxvOAAHfBzcKaNA685.png?token=5e3896a72fd673794faf330de85fb132&ts=1587993750" alt="author">\n' +
+            '                    </div>\n' +
+            '                    <div class="entry-author-name">\n' +
+            '                        <a href="#">bingo</a>\n' +
+            '                    </div>\n' +
+            '                </div><!--./ entry-meta-author -->\n' +
+            '                <div class="entry-date">\n' +
+            '                    <span>'+11+'</span>\n' +
+            '                </div><!--./ entry-date -->\n' +
+            '                <div class="entry-views">\n' +
+            '                    <span>30分钟前</span>\n' +
+            '                </div><!--./ entry-date -->\n' +
+            '                <div class="entry-category">\n' +
+            '                    <a class="cat" href="#">Java</a>\n' +
+            '                </div><!--./ entry-category -->\n' +
+            '            </div><!--./ entry-meta-content -->\n' +
+            '            <div class="entry-summary">\n' +
+            '                <p>'+11+'</p>\n' +
+            '            </div>\n' +
+            '        </div><!--./ content-entry-wrap -->\n' +
+            '    </article>\n' +
+            '</div>\n'
+        $('#main_list').append(htmlStr);
+
 
 
 
@@ -823,6 +859,62 @@
         if (r != null) return unescape(r[2]); return null; //返回参数值
     }
 
+    // var new_element1=document.createElement("script");
+    // new_element1.setAttribute("type","text/javascript");
+    // new_element1.setAttribute("src","../static/js/popper.min.js");
+    // document.body.appendChild(new_element1);
+    //
+    // var new_element2=document.createElement("script");
+    // new_element2.setAttribute("type","text/javascript");
+    // new_element2.setAttribute("src","../static/js/owl.carousel.min.js");
+    // document.body.appendChild(new_element2);
+    //
+    // var new_element3=document.createElement("script");
+    // new_element3.setAttribute("type","text/javascript");
+    // new_element3.setAttribute("src","../static/js/masonary.min.js");
+    // document.body.appendChild(new_element3);
+    //
+    // var new_element4=document.createElement("script");
+    // new_element4.setAttribute("type","text/javascript");
+    // new_element4.setAttribute("src","../static/js/breaking-news-ticker.min.js");
+    // document.body.appendChild(new_element4);
+    //
+    // document.body.appendChild(new_element5);
+    //
+    // var new_element5=document.createElement("script");
+    // new_element5.setAttribute("type","text/javascript");
+    // new_element5.setAttribute("src","../static/js/jquery.trackpad-scroll-emulator.min.js");
+    // document.body.appendChild(new_element5);
+    //
+    // var new_element6=document.createElement("script");
+    // new_element6.setAttribute("type","text/javascript");
+    // new_element6.setAttribute("src","../static/js/ResizeSensor.min.js");
+    // document.body.appendChild(new_element6);
+    //
+    // var new_element7=document.createElement("script");
+    // new_element7.setAttribute("type","text/javascript");
+    // new_element7.setAttribute("src","theia-sticky-sidebar.min.js");
+    // document.body.appendChild(new_element7);
+
+
+
+
+    // document.body.appendChild("../static/js/popper.min.js");
 </script>
+
+    <!-- Popper js -->
+    <script src="../static/js/popper.min.js"></script>
+    <!-- Owl carousel js -->
+    <script src="../static/js/owl.carousel.min.js"></script>
+    <!-- Masonary js -->
+    <script src="../static/js/masonary.min.js"></script>
+    <!-- News Ticker js -->
+    <script src="../static/js/breaking-news-ticker.min.js"></script>
+    <!-- Trackpad Scroll js -->
+    <script src="../static/js/jquery.trackpad-scroll-emulator.min.js"></script>
+    <!-- Sticky ResizeSensor js -->
+    <script src="../static/js/ResizeSensor.min.js"></script>
+    <!-- Sticky Sidebar js -->
+    <script src="../static/js/theia-sticky-sidebar.min.js"></script>
 </body>
 </html>
